@@ -25,57 +25,54 @@ public class ReceiverFragment extends Fragment {
     private List<String> list;
     private ArrayAdapter adapter;
     public ReceiverFragment() {
-        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_receiver, container, false);
         lv_receiver = view.findViewById(R.id.lv_receiver);
         list = new ArrayList<>();
-        adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         lv_receiver.setAdapter(adapter);
+        //注册EventBus
         EventBus.getDefault().register(this);
         return view;
     }
-
+    //订阅信息，post过来的信息将在这里被接收
     @Subscribe
-    public void getMessage(MessageEvent event){
+    public void getMessage(MessageEvent event) {
         list.add(event.getMessage());
         adapter.notifyDataSetChanged();
     }
+    @Override
+    public void onStop() {
+        super.onStop();
+        //取消注册EventBus
+        EventBus.getDefault().unregister(this);
+    }
 
     @Subscribe(priority = 1)
-    public void getMessage_1(MessageEvent event){
+    public void getMessage_1(MessageEvent event) {
         list.add(event.getMessage());
         adapter.notifyDataSetChanged();
     }
 
     @Subscribe(priority = 2)
-    public void getMessage_2(MessageEvent event){
+    public void getMessage_2(MessageEvent event) {
         EventBus.getDefault().cancelEventDelivery(event);
         list.add(event.getMessage());
         adapter.notifyDataSetChanged();
     }
+
     @Subscribe(priority = 3)
-    public void getMessage_3(MessageEvent event){
+    public void getMessage_3(MessageEvent event) {
         list.add(event.getMessage());
         adapter.notifyDataSetChanged();
     }
 
-
-
     @Subscribe
-    public void getMessage2(ToastEvent event){
+    public void getMessage2(ToastEvent event) {
         Toast.makeText(getActivity(), event.getMsg(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 }

@@ -31,10 +31,9 @@ public class SnedFragment extends Fragment {
             public void onClick(View v) {
                 count++;
                 EventBus.getDefault().post(new MessageEvent(getString(R.string.text_msg_content,count)));
-
             }
         });
-        view.findViewById(R.id.btn_send_toast).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.btn_send_toast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new ToastEvent(getString(R.string.text_msg_content,count)));
